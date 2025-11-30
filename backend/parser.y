@@ -329,12 +329,19 @@ if_statement:
         $$ = create_node(NODE_IF);
         $$->condition = $3;
         $$->body = $6;
+        $$->else_body = NULL;
     }
     | JODI LPAREN condition RPAREN LBRACE statement_list RBRACE NAHOLE LBRACE statement_list RBRACE {
         $$ = create_node(NODE_IF);
         $$->condition = $3;
         $$->body = $6;
         $$->else_body = $10;
+    }
+    | JODI LPAREN condition RPAREN LBRACE statement_list RBRACE NAHOLE if_statement {
+        $$ = create_node(NODE_IF);
+        $$->condition = $3;
+        $$->body = $6;
+        $$->else_body = $9;
     }
     ;
 
