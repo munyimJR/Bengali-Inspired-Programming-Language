@@ -1,9 +1,0 @@
-@echo off
-REM Simple log viewer - shows backend console
-
-echo Opening backend logs...
-echo. 
-echo Note: Backend runs in a separate window
-echo Check the "Bangla Compiler Backend" window for logs
-echo. 
-pause
