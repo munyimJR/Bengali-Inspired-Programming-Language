@@ -124,7 +124,7 @@ program:
     SHURU statement_list SHESH {
         $$ = $2;
         execute_node($$);
-        printf("\n[Program completed successfully]\n");
+        printf("\n[প্রোগ্রাম সফলভাবে সম্পন্ন হয়েছে]\n");
         free_tree($$);
     }
     ;
@@ -794,7 +794,7 @@ Symbol* declare_symbol(const char *name, VarType type) {
 int main(int argc, char **argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
     
-    printf("=== Bangla Programming Language Compiler ===\n\n");
+    printf("=== বাংলা প্রোগ্রামিং ভাষা কম্পাইলার ===\n\n");
     
     if (argc > 1) {
         yyin = fopen(argv[1], "r");

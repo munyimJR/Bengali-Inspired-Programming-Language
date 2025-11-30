@@ -94,7 +94,7 @@ app.post('/api/compile', async (req, res) => {
                 await cleanup(sessionDir);
                 return res.json({
                     success: false,
-                    error: 'Compilation Error',
+                    error: 'কম্পাইলেশন ত্রুটি',
                     output: compileStderr || compileError.message
                 });
             }
@@ -118,15 +118,15 @@ app.post('/api/compile', async (req, res) => {
                 if (runError && runError.killed) {
                     return res.json({
                         success: false,
-                        error: 'Timeout',
-                        output: 'Program execution timed out (5 seconds limit)'
+                        error: 'টাইমআউট',
+                        output: 'প্রোগ্রাম এক্সিকিউশন টাইমআউট (৫ সেকেন্ড সীমা)'
                     });
                 }
 
                 if (runError) {
                     return res.json({
                         success: false,
-                        error: 'Runtime Error',
+                        error: 'রানটাইম ত্রুটি',
                         output: runStderr || runError.message
                     });
                 }
@@ -143,7 +143,7 @@ app.post('/api/compile', async (req, res) => {
         await cleanup(sessionDir);
         res.status(500).json({
             success: false,
-            error: 'Server Error',
+            error: 'সার্ভার ত্রুটি',
             output: err.message
         });
     }
@@ -164,7 +164,7 @@ const cleanup = async (dir) => {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Bangla Compiler API is running' });
+    res.json({ status: 'ok', message: 'বাংলা কম্পাইলার API চালু আছে' });
 });
 
 // Example codes endpoint
@@ -172,60 +172,89 @@ app.get('/api/examples', (req, res) => {
     const examples = [
         {
             id: 1,
-            title: 'Hello World',
+            title: 'হ্যালো ওয়ার্ল্ড',
             code: `শুরু
-    দেখাও << "Hello, Bangla Programming!" << নতুনলাইন;
+    দেখাও << "হ্যালো, বাংলা প্রোগ্রামিং!" << নতুনলাইন;
 শেষ`
         },
         {
             id: 2,
-            title: 'Variables and Math',
+            title: 'ভেরিয়েবল এবং গণিত',
             code: `শুরু
-    পূর্ণসংখ্যা a = 10, b = 20;
-    পূর্ণসংখ্যা sum = a + b;
-    দেখাও << "Sum: " << sum << নতুনলাইন;
+    পূর্ণসংখ্যা এ = ১০, বি = ২০;
+    পূর্ণসংখ্যা যোগফল = এ + বি;
+    দেখাও << "যোগফল: " << যোগফল << নতুনলাইন;
 শেষ`
         },
         {
             id: 3,
-            title: 'Bangla Digits Support',
+            title: 'বাংলা সংখ্যা সাপোর্ট',
             code: `শুরু
     পূর্ণসংখ্যা x = ১১, y = ২৫;
-    পূর্ণসংখ্যা result = x + y;
-    দেখাও << "১১ + ২৫ = " << result << নতুনলাইন;
+    পূর্ণসংখ্যা ফলাফল = x + y;
+    দেখাও << "১১ + ২৫ = " << ফলাফল << নতুনলাইন;
     দেখাও << "বাংলা সংখ্যা কাজ করছে!" << নতুনলাইন;
 শেষ`
         },
         {
             id: 4,
-            title: 'If-Else Statement',
+            title: 'যদি-নাহলে স্টেটমেন্ট',
             code: `শুরু
-    পূর্ণসংখ্যা num = 15;
-    যদি (num > 10) {
-        দেখাও << "Number is greater than 10" << নতুনলাইন;
+    পূর্ণসংখ্যা সংখ্যা = ১৫;
+    যদি (সংখ্যা > ১০) {
+        দেখাও << "সংখ্যা ১০ এর চেয়ে বড়" << নতুনলাইন;
     } নাহলে {
-        দেখাও << "Number is less than or equal to 10" << নতুনলাইন;
+        দেখাও << "সংখ্যা ১০ এর চেয়ে ছোট বা সমান" << নতুনলাইন;
     }
 শেষ`
         },
         {
             id: 5,
-            title: 'Loop Example',
+            title: 'লুপ উদাহরণ',
             code: `শুরু
     পূর্ণসংখ্যা i;
-    জন্য (i = 1; i <= 5; i++) {
-        দেখাও << "Count: " << i << নতুনলাইন;
+    জন্য (i = ১; i <= ৫; i++) {
+        দেখাও << "গণনা: " << i << নতুনলাইন;
     }
 শেষ`
         },
         {
             id: 6,
-            title: 'User Input (Bangla Digits)',
+            title: 'ইউজার ইনপুট',
             code: `শুরু
-    পূর্ণসংখ্যা num;
+    পূর্ণসংখ্যা সংখ্যা;
     দেখাও << "একটি সংখ্যা লিখুন: ";
-    নাও >> num;
-    দেখাও << "আপনি লিখেছেন: " << num << নতুনলাইন;
+    নাও >> সংখ্যা;
+    দেখাও << "আপনি লিখেছেন: " << সংখ্যা << নতুনলাইন;
+শেষ`
+        },
+        {
+            id: 7,
+            title: 'ফ্যাক্টরিয়াল',
+            code: `শুরু
+    পূর্ণসংখ্যা সংখ্যা = ৫;
+    পূর্ণসংখ্যা ফ্যাক্টরিয়াল = ১;
+    পূর্ণসংখ্যা i;
+    
+    জন্য (i = ১; i <= সংখ্যা; i++) {
+        ফ্যাক্টরিয়াল = ফ্যাক্টরিয়াল * i;
+    }
+    
+    দেখাও << সংখ্যা << " এর ফ্যাক্টরিয়াল: " << ফ্যাক্টরিয়াল << নতুনলাইন;
+শেষ`
+        },
+        {
+            id: 8,
+            title: 'গুণিতক সারণি',
+            code: `শুরু
+    পূর্ণসংখ্যা সংখ্যা = ৫;
+    পূর্ণসংখ্যা i;
+    
+    দেখাও << সংখ্যা << " এর গুণিতক সারণি:" << নতুনলাইন;
+    
+    জন্য (i = ১; i <= ১০; i++) {
+        দেখাও << সংখ্যা << " x " << i << " = " << (সংখ্যা * i) << নতুনলাইন;
+    }
 শেষ`
         }
     ];
@@ -233,6 +262,6 @@ app.get('/api/examples', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Bangla Compiler Server running on port ${PORT}`);
-    console.log(`UTF-8 encoding enabled for Bangla input support`);
+    console.log(`বাংলা কম্পাইলার সার্ভার পোর্ট ${PORT} এ চালু আছে`);
+    console.log(`UTF-8 এনকোডিং সক্রিয় আছে বাংলা ইনপুট সাপোর্টের জন্য`);
 });
