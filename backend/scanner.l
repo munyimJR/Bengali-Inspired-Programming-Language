@@ -70,9 +70,9 @@ STRING      \"([^\\\"]|\\.)*\"
 
 "শুরু"                          { return SHURU; }
 "শেষ"                           { return SHESH; }
-"পূর্ণসংখ্যা"                   { return PURNO; }
+"পূর্ণ"                           { return PURNO; }
 "দশমিক"                         { return VOGNO; }
-"অক্ষর"                         { return SHOBDO; }
+"শব্দ"                         { return SHOBDO; }
 "যদি"                           { return JODI; }
 "নাহলে"                         { return NAHOLE; }
 "যতক্ষণ"                        { return JOTOKKHON; }
