@@ -1,288 +1,545 @@
-# Bangla Programming Language - Online Compiler
+# 🇧🇩 বাংলা প্রোগ্রামিং ভাষা (Bangla Programming Language)
 
-A full-stack web application for compiling and running Bangla programming language code online with pure HTML/CSS/JavaScript frontend.
+A complete programming language with Bengali/Bangla syntax, supporting Bangla keywords, variable names, and digits. Write code entirely in your native language!
 
-## 🚀 Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Language: Bangla](https://img.shields.io/badge/Language-Bangla-green.svg)](https://github.com/munyimJR/Bengali-Inspired-Programming-Language)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
 
-- ✨ Beautiful, modern IDE interface
-- 🔥 Real-time code compilation and execution
-- 📝 Code examples library
-- 💾 Download and copy code functionality
-- 🎨 Clean, responsive design
-- 📱 Mobile-friendly interface
-- ⚡ Pure HTML/CSS/JavaScript (no framework dependencies)
+## 🌟 Features
 
-## 📋 Prerequisites
+- ✅ **Pure Bangla Syntax** - Write code completely in Bangla
+- ✅ **Bangla Variable Names** - Use `এ`, `বি`, `সংখ্যা` instead of `a`, `b`, `num`
+- ✅ **Bangla Digits** - Support for `০১২৩৪৫৬৭৮৯`
+- ✅ **AST-Based Interpreter** - Working loops with Abstract Syntax Tree execution
+- ✅ **Web-Based IDE** - Beautiful online compiler with real-time execution
+- ✅ **UTF-8 Support** - Full Unicode Bangla character support
+- ✅ **Interactive Examples** - Built-in code examples to get started
 
-### Backend Requirements
-- Node.js (v16 or higher)
-- npm or yarn
-- flex (lexical analyzer)
-- bison (parser generator)
-- gcc (C compiler)
+## 🚀 Installation
 
-### Frontend Requirements
-- Any modern web browser
-- Web server (optional, can open HTML file directly)
+### Prerequisites
 
-## 🛠️ Installation
+- **Node.js** (v16 or higher)
+- **npm** or **yarn**
+- **flex** (Fast Lexical Analyzer)
+- **bison** (Parser Generator)
+- **gcc** (GNU C Compiler)
 
-### Backend Setup
+### Quick Start (Windows Users)
 
-1. **Install system dependencies** (Ubuntu/Debian):
+**For Windows users, we provide automated batch scripts:**
+
+1. **Clone Repository:**
+```bash
+git clone https://github.com/munyimJR/Bengali-Inspired-Programming-Language.git
+cd Bengali-Inspired-Programming-Language
+```
+
+2. **Run start.bat:**
+```bash
+start.bat
+```
+
+**What start.bat does:**
+- ✅ Installs npm dependencies automatically
+- ✅ Compiles scanner.l using Flex
+- ✅ Compiles parser.y using Bison
+- ✅ Compiles the C code using GCC
+- ✅ Starts the backend server on port 3001
+- ✅ Opens frontend in your default browser
+
+3. **Stop the server (when needed):**
+```bash
+stop.bat
+```
+
+**What stop.bat does:**
+- ✅ Finds Node.js process running on port 3001
+- ✅ Stops the backend server gracefully
+
+### Manual Installation Steps
+
+#### 1. Install System Dependencies
+
+**Ubuntu/Debian:**
 ```bash
 sudo apt-get update
-sudo apt-get install flex bison gcc make
+sudo apt-get install flex bison gcc make nodejs npm
 ```
 
-For macOS:
+**macOS:**
 ```bash
-brew install flex bison gcc
+brew install flex bison gcc node
 ```
 
-2. **Create backend directory and setup files**:
+**Windows:**
+- Install [Node.js](https://nodejs.org/)
+- Install [MinGW-w64](https://www.mingw-w64.org/) for gcc, flex, bison
+- Or use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install) with Ubuntu
+
+#### 2. Clone Repository
+
 ```bash
-mkdir bangla-compiler-backend
-cd bangla-compiler-backend
+git clone https://github.com/munyimJR/Bengali-Inspired-Programming-Language.git
+cd Bengali-Inspired-Programming-Language
 ```
 
-3. **Copy the required files**:
-- Place `server.js` in the backend directory
-- Place `package.json` in the backend directory
-- Copy your `scanner.l` file to the backend directory
-- Copy your `parser.y` file to the backend directory
+#### 3. Install Dependencies
 
-4. **Install Node.js dependencies**:
 ```bash
+cd backend
 npm install
 ```
 
-5. **Start the backend server**:
+#### 4. Compile the Compiler
+
+**Windows (using start.bat):**
 ```bash
-npm start
+start.bat
 ```
 
-The backend will run on `http://localhost:3001`
-
-### Frontend Setup
-
-**Option 1: Direct File Opening (Simple)**
-1. Save the HTML file as `index.html`
-2. Open it directly in your browser
-3. Make sure backend is running on `http://localhost:3001`
-
-**Option 2: Using a Local Web Server (Recommended)**
-
-**Using Python:**
+**Manual Compilation:**
 ```bash
-# Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
+cd backend
+flex scanner.l
+bison -d parser.y
+gcc -o compiler lex.yy.c parser.tab.c -lm
 ```
 
-**Using Node.js (http-server):**
+#### 5. Start the Server
+
+**Windows (Quick Start):**
 ```bash
-npm install -g http-server
-http-server -p 8000
+# The start.bat script will:
+# 1. Compile the compiler automatically
+# 2. Install npm dependencies
+# 3. Start the backend server
+# 4. Open the frontend in your default browser
+
+start.bat
 ```
 
-**Using PHP:**
+**Manual Start:**
 ```bash
-php -S localhost:8000
+cd backend
+node server.js
 ```
 
-Then open `http://localhost:8000` in your browser.
+The server will run on `http://localhost:3001`
 
-**Option 3: Using Live Server (VS Code)**
-1. Install "Live Server" extension in VS Code
-2. Right-click on `index.html`
-3. Select "Open with Live Server"
+**To Stop (Windows):**
+```bash
+stop.bat
+```
+
+#### 6. Open Frontend
+
+**If using start.bat:** The frontend will open automatically in your browser.
+
+**Manual Open:**
+- Simply open `frontend/index.html` in your browser, or
+- Serve it using a local server:
+
+```bash
+# Using Python
+cd frontend
+python -m http.server 8080
+
+# Using Node.js http-server
+cd frontend
+npx http-server -p 8080
+```
+
+Access at: `http://localhost:8080`
+
+## ⚡ Quick Start
+
+### Your First Bangla Program
+
+```bangla
+শুরু
+    দেখাও << "হ্যালো, বাংলা প্রোগ্রামিং!" << নতুনলাইন;
+শেষ
+```
+
+**Output:**
+```
+হ্যালো, বাংলা প্রোগ্রামিং!
+```
+
+### Variables and Arithmetic
+
+```bangla
+শুরু
+    পূর্ণসংখ্যা এ = ১০, বি = ২০;
+    পূর্ণসংখ্যা যোগফল = এ + বি;
+    দেখাও << "যোগফল: " << যোগফল << নতুনলাইন;
+শেষ
+```
+
+**Output:**
+```
+যোগফল: 30
+```
+
+## 📖 Language Syntax
+
+### Keywords (কীওয়ার্ড)
+
+| Bangla | English | Description |
+|--------|---------|-------------|
+| `শুরু` | start | Program start |
+| `শেষ` | end | Program end |
+| `পূর্ণসংখ্যা` | int | Integer type |
+| `দশমিক` | float | Float type |
+| `অক্ষর` | string | String type |
+| `যদি` | if | If condition |
+| `নাহলে` | else | Else condition |
+| `যতক্ষণ` | while | While loop |
+| `জন্য` | for | For loop |
+| `দেখাও` | print | Output/Print |
+| `নাও` | input | Input |
+| `নতুনলাইন` | newline | New line |
+
+### Data Types (ডেটা টাইপ)
+
+#### Integer (পূর্ণসংখ্যা)
+```bangla
+পূর্ণসংখ্যা সংখ্যা = ১০;
+পূর্ণসংখ্যা এ = ৫, বি = ১৫;
+```
+
+#### Float (দশমিক)
+```bangla
+দশমিক মূল্য = ৯৯.৯৯;
+দশমিক পাই = ৩.১৪১৫৯;
+```
+
+#### String (অক্ষর)
+```bangla
+অক্ষর নাম = "রহিম";
+অক্ষর বার্তা = "স্বাগতম!";
+```
+
+### Operators (অপারেটর)
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `+` | Addition | `এ + বি` |
+| `-` | Subtraction | `এ - বি` |
+| `*` | Multiplication | `এ * বি` |
+| `/` | Division | `এ / বি` |
+| `=` | Assignment | `এ = ১০` |
+| `==` | Equal to | `এ == বি` |
+| `!=` | Not equal | `এ != বি` |
+| `<` | Less than | `এ < বি` |
+| `>` | Greater than | `এ > বি` |
+| `<=` | Less or equal | `এ <= বি` |
+| `>=` | Greater or equal | `এ >= বি` |
+| `&&` | Logical AND | `(এ > 0) && (বি > 0)` |
+| `||` | Logical OR | `(এ > 0) || (বি > 0)` |
+| `++` | Increment | `এ++` |
+| `--` | Decrement | `এ--` |
+| `+=` | Add assign | `এ += ৫` |
+| `-=` | Subtract assign | `এ -= ৫` |
+| `*=` | Multiply assign | `এ *= ২` |
+| `/=` | Divide assign | `এ /= ২` |
+| `<<` | Output operator | `দেখাও << "text"` |
+| `>>` | Input operator | `নাও >> variable` |
+
+### Bangla Digits (বাংলা সংখ্যা)
+
+Both English and Bangla digits are supported:
+
+| Bangla | English |
+|--------|---------|
+| ০ | 0 |
+| ১ | 1 |
+| ২ | 2 |
+| ৩ | 3 |
+| ৪ | 4 |
+| ৫ | 5 |
+| ৬ | 6 |
+| ৭ | 7 |
+| ৮ | 8 |
+| ৯ | 9 |
+
+### Input/Output (ইনপুট/আউটপুট)
+
+#### Output
+```bangla
+দেখাও << "Hello" << নতুনলাইন;
+দেখাও << "সংখ্যা: " << ৫০ << নতুনলাইন;
+```
+
+#### Input
+```bangla
+পূর্ণসংখ্যা বয়স;
+দেখাও << "আপনার বয়স লিখুন: ";
+নাও >> বয়স;
+দেখাও << "আপনার বয়স: " << বয়স << নতুনলাইন;
+```
+
+### Control Flow (নিয়ন্ত্রণ প্রবাহ)
+
+#### If-Else Statement
+```bangla
+যদি (সংখ্যা > ১০) {
+    দেখাও << "বড় সংখ্যা" << নতুনলাইন;
+} নাহলে {
+    দেখাও << "ছোট সংখ্যা" << নতুনলাইন;
+}
+```
+
+#### While Loop
+```bangla
+পূর্ণসংখ্যা i = ১;
+যতক্ষণ (i <= ৫) {
+    দেখাও << "লাইন: " << i << নতুনলাইন;
+    i++;
+}
+```
+
+#### For Loop
+```bangla
+পূর্ণসংখ্যা i;
+জন্য (i = ১; i <= ১০; i++) {
+    দেখাও << i << নতুনলাইন;
+}
+```
+
+## 💡 Examples
+
+### Example 1: Hello World
+```bangla
+শুরু
+    দেখাও << "হ্যালো, বিশ্ব!" << নতুনলাইন;
+শেষ
+```
+
+### Example 2: Calculator
+```bangla
+শুরু
+    পূর্ণসংখ্যা প্রথম = ২৫, দ্বিতীয় = ১৫;
+    
+    দেখাও << "যোগফল: " << (প্রথম + দ্বিতীয়) << নতুনলাইন;
+    দেখাও << "বিয়োগফল: " << (প্রথম - দ্বিতীয়) << নতুনলাইন;
+    দেখাও << "গুণফল: " << (প্রথম * দ্বিতীয়) << নতুনলাইন;
+শেষ
+```
+
+### Example 3: Factorial
+```bangla
+শুরু
+    পূর্ণসংখ্যা সংখ্যা = ৫;
+    পূর্ণসংখ্যা ফ্যাক্টরিয়াল = ১;
+    পূর্ণসংখ্যা i;
+    
+    জন্য (i = ১; i <= সংখ্যা; i++) {
+        ফ্যাক্টরিয়াল = ফ্যাক্টরিয়াল * i;
+    }
+    
+    দেখাও << সংখ্যা << " এর ফ্যাক্টরিয়াল: " << ফ্যাক্টরিয়াল << নতুনলাইন;
+শেষ
+```
+
+**Output:** `5 এর ফ্যাক্টরিয়াল: 120`
+
+### Example 4: User Input
+```bangla
+শুরু
+    অক্ষর নাম;
+    পূর্ণসংখ্যা বয়স;
+    
+    দেখাও << "আপনার নাম লিখুন: ";
+    নাও >> নাম;
+    
+    দেখাও << "আপনার বয়স লিখুন: ";
+    নাও >> বয়স;
+    
+    দেখাও << "হ্যালো " << নাম << ", আপনার বয়স " << বয়স << নতুনলাইন;
+শেষ
+```
+
+### Example 5: Sum of First N Numbers
+```bangla
+শুরু
+    পূর্ণসংখ্যা n = ১০;
+    পূর্ণসংখ্যা যোগফল = ০;
+    পূর্ণসংখ্যা i;
+    
+    জন্য (i = ১; i <= n; i++) {
+        যোগফল += i;
+    }
+    
+    দেখাও << "প্রথম " << n << " সংখ্যার যোগফল: " << যোগফল << নতুনলাইন;
+শেষ
+```
+
+**Output:** `প্রথম 10 সংখ্যার যোগফল: 55`
+
+### Example 6: Multiplication Table
+```bangla
+শুরু
+    পূর্ণসংখ্যা সংখ্যা = ৫;
+    পূর্ণসংখ্যা i;
+    
+    দেখাও << সংখ্যা << " এর গুণিতক সারণি:" << নতুনলাইন;
+    
+    জন্য (i = ১; i <= ১০; i++) {
+        দেখাও << সংখ্যা << " x " << i << " = " << (সংখ্যা * i) << নতুনলাইন;
+    }
+শেষ
+```
 
 ## 📁 Project Structure
 
 ```
-bangla-compiler/
+Bengali-Inspired-Programming-Language/
 ├── backend/
-│   ├── server.js
-│   ├── package.json
-│   ├── scanner.l
-│   ├── parser.y
-│   ├── .env (optional)
-│   ├── Dockerfile (optional)
-│   └── temp/ (auto-created)
-│
-└── frontend/
-    └── index.html (complete standalone file)
+│   ├── server.js           # Express server
+│   ├── scanner.l           # Flex lexer with Bangla digit support
+│   ├── parser.y            # Bison parser with AST implementation
+│   ├── package.json        # Node.js dependencies
+│   ├── Dockerfile          # Backend Docker config
+│   └── temp/               # Temporary compilation files (auto-created)
+├── frontend/
+│   ├── index.html          # Web IDE interface
+│   ├── Dockerfile          # Frontend Docker config
+│   └── nginx.conf          # Nginx configuration (optional)
+├── docker-compose.yml      # Docker Compose setup
+├── start.bat               # Windows startup script
+├── stop.bat                # Windows stop script
+├── README.md               # This file
+└── LICENSE                 # MIT License
 ```
 
-## 🎯 Usage
+## 🏗️ Architecture
 
-1. **Start the backend server:**
-   ```bash
-   cd backend
-   npm start
-   ```
+### Compiler Pipeline
 
-2. **Open the frontend:**
-   - Double-click `index.html` OR
-   - Serve it using a local web server
-   - Navigate to `http://localhost:8000` (if using web server)
+1. **Lexical Analysis (scanner.l)**
+   - Tokenizes Bangla keywords
+   - Converts Bangla digits (০-৯) to ASCII
+   - Handles UTF-8 encoding
 
-3. **Write or select example Bangla code**
+2. **Parsing (parser.y)**
+   - Builds Abstract Syntax Tree (AST)
+   - Supports all language constructs
+   - Implements two-phase execution
 
-4. **(Optional) Provide input in the input section**
+3. **Execution**
+   - AST-based interpreter
+   - Properly handles loops (for/while)
+   - Manages symbol table for variables
 
-5. **Click "Run Code" button**
+4. **Output**
+   - UTF-8 encoded output
+   - Supports Bangla text in strings
+   - Real-time compilation results
 
-6. **View output in the right panel**
+## 🛠️ Development
 
-## 🔧 Configuration
+### Running Locally
 
-### Change Backend Port
-Edit `server.js`:
-```javascript
-const PORT = process.env.PORT || 3001;
+```bash
+# Navigate to backend
+cd backend
+
+# Compile the compiler
+flex scanner.l
+bison -d parser.y
+gcc -o compiler lex.yy.c parser.tab.c -lm
+
+# Start backend
+node server.js
+
+# In another terminal, open frontend
+cd frontend
+# Open index.html in browser or use a local server
+python -m http.server 8080
 ```
 
-### Change API URL in Frontend
-Edit `index.html` (line ~318):
-```javascript
-const API_URL = 'http://localhost:3001/api';
-// Change to your backend URL
-```
+### Testing Manually
 
-### CORS Configuration
-If accessing from different domains, update `server.js`:
-```javascript
-app.use(cors({
-    origin: ['http://localhost:8000', 'http://yourdomain.com']
-}));
-```
-
-## 📝 Example Code
-
+Create a test file in `backend/test.txt`:
 ```bangla
 শুরু
-    পূর্ণসংখ্যা a = 10, b = 20;
-    পূর্ণসংখ্যা sum = a + b;
-    দেখাও << "Sum: " << sum << "\n";
+    পূর্ণসংখ্যা এ = ১০;
+    দেখাও << "মান: " << এ << নতুনলাইন;
 শেষ
 ```
 
-## 🐳 Docker Setup (Optional)
-
-### Backend with Docker
-
-1. **Create Dockerfile** in backend directory:
-```dockerfile
-FROM node:18-bullseye
-
-RUN apt-get update && apt-get install -y flex bison gcc make
-
-WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN mkdir -p temp
-
-EXPOSE 3001
-CMD ["npm", "start"]
+Run:
+```bash
+cd backend
+./compiler test.txt
 ```
 
-2. **Build and run:**
+### Modifying the Language
+
+1. **Add Keywords**: Edit `backend/scanner.l` to add new Bangla keywords
+2. **Add Grammar Rules**: Edit `backend/parser.y` to add new language constructs
+3. **Recompile**: 
+   ```bash
+   cd backend
+   flex scanner.l
+   bison -d parser.y
+   gcc -o compiler lex.yy.c parser.tab.c -lm
+   ```
+4. **Restart Server**: Stop and restart `node server.js`
+
+## 🐳 Docker Deployment
+
+### Using Docker Compose (Recommended)
+
 ```bash
+# Build and start all services
+docker-compose up --build
+
+# Run in background
+docker-compose up -d --build
+
+# Stop services
+docker-compose down
+```
+
+**Access:**
+- Frontend: `http://localhost:8080`
+- Backend: `http://localhost:3001`
+
+### Manual Docker Build
+
+**Backend:**
+```bash
+cd backend
 docker build -t bangla-compiler-backend .
 docker run -p 3001:3001 bangla-compiler-backend
 ```
 
-### Frontend with Docker (Nginx)
-
-1. **Create Dockerfile** in frontend directory:
-```dockerfile
-FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-2. **Build and run:**
+**Frontend:**
 ```bash
+cd frontend
 docker build -t bangla-compiler-frontend .
 docker run -p 8080:80 bangla-compiler-frontend
 ```
 
-## 🔒 Security Considerations
+## 🚀 Deployment
 
-- Code execution is sandboxed with timeout limits (5 seconds)
-- Temporary files are automatically cleaned up
-- File size limits are enforced on backend
-- CORS is configured for development
-- Input validation on both client and server
+### Deploy Backend (Heroku)
 
-## 🐛 Troubleshooting
-
-### Backend Issues
-
-**"flex: command not found"**
+1. Navigate to backend directory:
 ```bash
-sudo apt-get install flex bison gcc
+cd backend
 ```
 
-**"Cannot open file 'scanner.l'"**
-- Ensure scanner.l and parser.y are in the backend directory
-- Check file names match exactly (case-sensitive)
-
-**Port already in use**
-```bash
-# Kill process on port 3001
-lsof -ti:3001 | xargs kill -9
-# Or change PORT in server.js
-```
-
-### Frontend Issues
-
-**"Failed to connect to server"**
-- Verify backend is running: `curl http://localhost:3001/api/health`
-- Check browser console for CORS errors
-- Ensure API_URL in HTML matches your backend URL
-
-**CORS errors**
-- Update CORS configuration in server.js
-- Use same protocol (http/https) for both frontend and backend
-
-**Examples not loading**
-- Check backend is running
-- Verify `/api/examples` endpoint works
-- Check browser console for errors
-
-### Compilation Errors
-
-**"Syntax error in Bangla code"**
-- Check for missing semicolons
-- Verify keyword spelling (বাংলা characters)
-- Ensure proper block structure with { }
-
-**"Division by zero"**
-- Check your arithmetic operations
-- The compiler will catch this at runtime
-
-## 📦 Deployment
-
-### Backend Deployment (Heroku Example)
-
-1. **Create `Procfile`:**
+2. Create `Procfile`:
 ```
 web: node server.js
 ```
 
-2. **Add buildpack for C compiler:**
-```bash
-heroku buildpacks:add --index 1 heroku-community/apt
-```
-
-3. **Create `Aptfile`:**
+3. Create `Aptfile`:
 ```
 flex
 bison
@@ -290,119 +547,166 @@ gcc
 make
 ```
 
-4. **Deploy:**
+4. Deploy:
 ```bash
-git init
 heroku create your-app-name
-git add .
-git commit -m "Initial commit"
+heroku buildpacks:add --index 1 heroku-community/apt
+heroku buildpacks:add heroku/nodejs
 git push heroku main
 ```
 
-### Frontend Deployment
+### Deploy Frontend (Netlify/Vercel)
 
-**GitHub Pages:**
-1. Update API_URL to your backend URL
-2. Push to GitHub repository
-3. Enable GitHub Pages in repository settings
+1. Update `API_URL` in `frontend/index.html` to your Heroku backend URL
+2. Deploy `frontend/` directory to Netlify or Vercel
+3. Done! 🎉
 
-**Netlify:**
-1. Update API_URL in index.html
-2. Drag and drop index.html to Netlify
-3. Or connect GitHub repository
+## 🐛 Troubleshooting
 
-**Vercel:**
+### Common Issues
+
+**Error: "flex: command not found"**
 ```bash
-npm install -g vercel
-vercel
+# Ubuntu/Debian
+sudo apt-get install flex bison gcc
+
+# macOS
+brew install flex bison gcc
 ```
 
-## 🌐 Environment Variables (Backend)
+**Error: "Undeclared variable"**
+- Declare variables before using: `পূর্ণসংখ্যা x = 5;`
+- Check spelling of variable names
 
-Create `.env` file in backend directory:
-```env
-PORT=3001
-NODE_ENV=production
-COMPILE_TIMEOUT=10000
-EXECUTION_TIMEOUT=5000
+**Error: "Cannot use keyword as variable name"**
+- Don't use keywords like `শুরু`, `শেষ` as variable names
+- Use different names like `x`, `সংখ্যা`, `মান`
+
+**Error: "Comma-separated declarations not working"**
+- Make sure you're using the latest parser.y (AST-based)
+- Recompile after updating parser
+
+**Loops only execute once**
+- Verify you're using the AST-based parser
+- Check loop condition syntax
+
+**String input shows 0 or empty**
+- Use `অক্ষর` type for strings
+- Make sure input is on separate line
+
+**Port already in use**
+```bash
+# Linux/macOS
+lsof -ti:3001 | xargs kill -9
+
+# Windows
+netstat -ano | findstr :3001
+taskkill /PID <PID> /F
 ```
 
-## 📊 API Endpoints
+## 📚 API Reference
 
-### Health Check
+### Endpoints
+
+#### Health Check
 ```
 GET /api/health
-Response: { "status": "ok", "message": "..." }
+Response: { "status": "ok", "message": "Bangla Compiler API is running" }
 ```
 
-### Get Examples
+#### Get Examples
 ```
 GET /api/examples
-Response: [{ "id": 1, "title": "...", "code": "..." }, ...]
+Response: [
+  { "id": 1, "title": "Hello World", "code": "..." },
+  ...
+]
 ```
 
-### Compile and Run
+#### Compile Code
 ```
 POST /api/compile
-Body: { "code": "...", "input": "..." }
-Response: { "success": true, "output": "...", "error": "..." }
+Body: {
+  "code": "শুরু\n    দেখাও << \"Hello\" << নতুনলাইন;\nশেষ",
+  "input": "optional input data"
+}
+Response: {
+  "success": true,
+  "output": "Hello\n[Program completed successfully]",
+  "error": ""
+}
 ```
 
-## 🎨 Customization
+## 🤝 Contributing
 
-### Change Color Scheme
-Edit the CSS in `index.html`:
-```css
-/* Main gradient background */
-background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+Contributions are welcome! Here's how:
 
-/* Primary button colors */
-background: linear-gradient(to right, #9333ea, #ec4899);
-```
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
 
-### Add More Examples
-Edit `server.js` examples endpoint or modify the frontend to add static examples.
+### Areas to Contribute
 
-## 📄 License
+- 🐛 Bug fixes
+- ✨ New language features (functions, arrays)
+- 📖 Documentation improvements
+- 🎨 UI/UX enhancements
+- 🧪 Test coverage
+- 🌐 More examples
+- 📱 Mobile app version
 
-MIT License
+## 📜 License
 
-## 👨‍💻 Contributing
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 👨‍💻 Author
 
-## 📧 Support
+**munyimJR**
+- GitHub: [@munyimJR](https://github.com/munyimJR)
+- Repository: [Bengali-Inspired-Programming-Language](https://github.com/munyimJR/Bengali-Inspired-Programming-Language)
 
-For issues and questions:
-1. Check this README first
-2. Review troubleshooting section
-3. Open an issue on GitHub with:
-   - Error message
-   - Steps to reproduce
-   - Environment details (OS, Node version, etc.)
+## 🙏 Acknowledgments
 
-## 🔄 Updates
+- Built with Flex, Bison, Node.js, and Express
+- Inspired by the need for native language programming
+- Thanks to all contributors and the Bangla programming community
 
-To update the compiler:
-1. Modify `scanner.l` or `parser.y`
-2. Restart the backend server
-3. The changes will be reflected immediately
+## 📞 Support
 
-## ⚡ Performance Tips
+⭐ **Star this repository** if you find it useful!
 
-1. **Backend**: 
-   - Run cleanup regularly
-   - Monitor temp directory size
-   - Use PM2 for production: `pm2 start server.js`
+For questions or issues:
+- 📝 Open an [Issue](https://github.com/munyimJR/Bengali-Inspired-Programming-Language/issues)
+- 💬 Start a [Discussion](https://github.com/munyimJR/Bengali-Inspired-Programming-Language/discussions)
 
-2. **Frontend**:
-   - Minify HTML/CSS for production
-   - Enable gzip compression on server
-   - Use CDN for static assets
+## 🗺️ Roadmap
 
-## 📚 Resources
+- [ ] Function support (`ফাংশন`)
+- [ ] Array data type (`তালিকা`)
+- [ ] Comments (`//` and `/* */`)
+- [ ] Modulo operator (`%`)
+- [ ] Break and Continue statements
+- [ ] Switch-case statement
+- [ ] String concatenation improvements
+- [ ] File I/O operations
+- [ ] Standard library functions
+- [ ] VS Code extension
+- [ ] Syntax highlighting
+- [ ] Code auto-completion
+- [ ] Debugging support
+- [ ] Mobile app
+- [ ] Package manager
 
-- Flex Documentation: https://github.com/westes/flex
-- Bison Documentation: https://www.gnu.org/software/bison/
-- Node.js Documentation: https://nodejs.org/
-- Express.js Guide: https://expressjs.com/"# Bengali-Inspired-Programming-Language" 
+---
+
+<div align="center">
+
+**Made with ❤️ for the Bangla programming community**
+
+🇧🇩 **বাংলায় কোড লিখুন, বাংলায় চিন্তা করুন!**
+
+[⭐ Star](https://github.com/munyimJR/Bengali-Inspired-Programming-Language) · [🐛 Report Bug](https://github.com/munyimJR/Bengali-Inspired-Programming-Language/issues) · [✨ Request Feature](https://github.com/munyimJR/Bengali-Inspired-Programming-Language/issues)
+
+</div>
