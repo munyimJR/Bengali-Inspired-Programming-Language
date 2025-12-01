@@ -77,6 +77,53 @@ void convert_bangla_to_ascii(char *str) {
     result[j] = '\0';
     strcpy(str, result);
 }
+/* Convert integer to Bangla digits for output */
+void print_bangla_number(int num) {
+    char str[50];
+    sprintf(str, "%d", num);
+    
+    const char* bangla_digits[] = {
+        "০", "১", "২", "৩", "৪", 
+        "৫", "৬", "৭", "৮", "৯"
+    };
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] >= '0' && str[i] <= '9') {
+            printf("%s", bangla_digits[str[i] - '0']);
+        } else if (str[i] == '-') {
+            printf("-");
+        } else {
+            printf("%c", str[i]);
+        }
+    }
+}
+
+/* Convert float to Bangla digits for output */
+void print_bangla_float(double num) {
+    char str[50];
+    sprintf(str, "%g", num);
+    
+    const char* bangla_digits[] = {
+        "০", "১", "২", "৩", "৪", 
+        "৫", "৬", "৭", "৮", "৯"
+    };
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] >= '0' && str[i] <= '9') {
+            printf("%s", bangla_digits[str[i] - '0']);
+        } else if (str[i] == '. ') {
+            printf(".");
+        } else if (str[i] == '-') {
+            printf("-");
+        } else if (str[i] == 'e' || str[i] == 'E') {
+            printf("e");
+        } else if (str[i] == '+') {
+            printf("+");
+        } else {
+            printf("%c", str[i]);
+        }
+    }
+}
 
 %}
 
@@ -602,9 +649,9 @@ void execute_node(ASTNode *node) {
                 } else {
                     double val = eval_expression(node->left);
                     if (fmod(val, 1.0) == 0) {
-                        printf("%d", (int)val);
+                        print_bangla_number((int)val);
                     } else {
-                        printf("%g", val);
+                        print_bangla_float(val);
                     }
                 }
             }
