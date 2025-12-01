@@ -405,7 +405,9 @@ Bengali-Inspired-Programming-Language/
 │   ├── Dockerfile          # Backend Docker config
 │   └── temp/               # Temporary compilation files (auto-created)
 ├── frontend/
-│   ├── index.html          # Web IDE interface
+│   ├── index.html          # Web interface
+|   ├── style.css           # Styling 
+|   ├── script.js           # IDE interface
 │   ├── Dockerfile          # Frontend Docker config
 │   └── nginx.conf          # Nginx configuration (optional)
 ├── docker-compose.yml      # Docker Compose setup
