@@ -124,9 +124,15 @@ const API_URL = 'http://localhost:3001/api';
             const outputContent = document.getElementById('outputContent');
             const statsDisplay = document.getElementById('statsDisplay');
             
+            // Convert numbers to Bangla digits
+            const toBanglaNumber = (num) => {
+                const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                return String(num).split('').map(digit => banglaDigits[digit]).join('');
+            };
+            
             // Update stats display
             if (keywordCount !== undefined && identifierCount !== undefined) {
-                statsDisplay.textContent = ` । কিওয়ার্ডঃ ${keywordCount} । আইডেন্টিফায়ারঃ ${identifierCount}`;
+                statsDisplay.textContent = ` । কিওয়ার্ডঃ ${toBanglaNumber(keywordCount)} । আইডেন্টিফায়ারঃ ${toBanglaNumber(identifierCount)}`;
             } else {
                 statsDisplay.textContent = '';
             }
