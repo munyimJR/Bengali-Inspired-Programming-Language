@@ -186,7 +186,7 @@ Access at: `http://localhost:8080`
 
 **Statistics:** আউটপুট । কিওয়ার্ডঃ ৬ । আইডেন্টিফায়ারঃ ৬
 
-> The IDE automatically counts and displays the number of keywords and identifiers in your code after compilation!
+> The IDE automatically counts and displays the number of keywords and identifiers in your code after compilation in Bangla digits!
 
 ## 📖 Language Syntax
 
