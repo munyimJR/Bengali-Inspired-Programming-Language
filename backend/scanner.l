@@ -5,6 +5,8 @@
 #include <string.h>
 #include <locale.h>
 int line_num = 1;
+int keyword_count = 0;
+int identifier_count = 0;
 
 /* Helper function to convert Bangla digits to ASCII in lexer */
 int convert_bangla_digit_to_int(const char *str) {
@@ -68,18 +70,18 @@ STRING      \"([^\\\"]|\\.)*\"
     }
 }
 
-"শুরু"                          { return SHURU; }
-"শেষ"                           { return SHESH; }
-"পূর্ণ"                           { return PURNO; }
-"দশমিক"                         { return VOGNO; }
-"শব্দ"                         { return SHOBDO; }
-"যদি"                           { return JODI; }
-"নাহলে"                         { return NAHOLE; }
-"যতক্ষণ"                        { return JOTOKKHON; }
-"জন্য"                          { return JNY; }
-"দেখাও"                         { return DEKHAO; }
-"নাও"                           { return NAO; }
-"নতুনলাইন"                     { return NEWLINE_KW; }
+"শুরু"                          { keyword_count++; return SHURU; }
+"শেষ"                           { keyword_count++; return SHESH; }
+"পূর্ণ"                           { keyword_count++; return PURNO; }
+"দশমিক"                         { keyword_count++; return VOGNO; }
+"শব্দ"                         { keyword_count++; return SHOBDO; }
+"যদি"                           { keyword_count++; return JODI; }
+"নাহলে"                         { keyword_count++; return NAHOLE; }
+"যতক্ষণ"                        { keyword_count++; return JOTOKKHON; }
+"জন্য"                          { keyword_count++; return JNY; }
+"দেখাও"                         { keyword_count++; return DEKHAO; }
+"নাও"                           { keyword_count++; return NAO; }
+"নতুনলাইন"                     { keyword_count++; return NEWLINE_KW; }
 
 "+"                             { return PLUS; }
 "-"                             { return MINUS; }
@@ -150,6 +152,7 @@ STRING      \"([^\\\"]|\\.)*\"
 
 {ID}                            {
     yylval.sval = strdup(yytext);
+    identifier_count++;
     return IDENTIFIER;
 }
 

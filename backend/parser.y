@@ -10,6 +10,8 @@ int yylex(void);
 
 extern int line_num;
 extern FILE *yyin;
+extern int keyword_count;
+extern int identifier_count;
 
 typedef enum { TYPE_INT, TYPE_FLOAT, TYPE_STRING } VarType;
 
@@ -848,6 +850,10 @@ Symbol* declare_symbol(const char *name, VarType type) {
 int main(int argc, char **argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
     
+    // Reset counters
+    keyword_count = 0;
+    identifier_count = 0;
+    
     printf("=== বাংলা প্রোগ্রামিং ভাষা কম্পাইলার ===\n\n");
     
     if (argc > 1) {
@@ -866,5 +872,9 @@ int main(int argc, char **argv) {
     
     yyparse();
     fclose(yyin);
+    
+    // Print counts at the end
+    fprintf(stderr, "\n[STATS]KEYWORDS:%d,IDENTIFIERS:%d[/STATS]\n", keyword_count, identifier_count);
+    
     return 0;
 }

@@ -15,6 +15,7 @@ A complete programming language with Bengali/Bangla syntax, supporting Bangla ke
 - ✅ **Web-Based IDE** - Beautiful online compiler with real-time execution
 - ✅ **UTF-8 Support** - Full Unicode Bangla character support
 - ✅ **Interactive Examples** - Built-in code examples to get started
+- ✅ **Code Statistics** - Real-time keyword and identifier counting
 
 ## 🚀 Installation
 
@@ -182,6 +183,10 @@ Access at: `http://localhost:8080`
 ```
 যোগফল: 30
 ```
+
+**Statistics:** আউটপুট । কিওয়ার্ডঃ ৬ । আইডেন্টিফায়ারঃ ৬
+
+> The IDE automatically counts and displays the number of keywords and identifiers in your code after compilation!
 
 ## 📖 Language Syntax
 
@@ -635,9 +640,13 @@ Body: {
 Response: {
   "success": true,
   "output": "Hello\n[Program completed successfully]",
-  "error": ""
+  "error": "",
+  "keywordCount": 4,
+  "identifierCount": 0
 }
 ```
+
+**Note:** The response now includes `keywordCount` and `identifierCount` which show the total number of keywords and identifiers found in the compiled code.
 
 ## 🤝 Contributing
 

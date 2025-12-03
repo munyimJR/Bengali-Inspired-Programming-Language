@@ -107,7 +107,7 @@ const API_URL = 'http://localhost:3001/api';
                 const result = await response.json();
 
                 if (result.success) {
-                    showOutput(result.output, result.error);
+                    showOutput(result.output, result.error, result.keywordCount, result.identifierCount);
                 } else {
                     showError(result.output || result.error);
                 }
@@ -120,11 +120,21 @@ const API_URL = 'http://localhost:3001/api';
 }
 
         // Show output
-        function showOutput(output, error) {
+        function showOutput(output, error, keywordCount, identifierCount) {
             const outputContent = document.getElementById('outputContent');
+            const statsDisplay = document.getElementById('statsDisplay');
+            
+            // Update stats display
+            if (keywordCount !== undefined && identifierCount !== undefined) {
+                statsDisplay.textContent = ` । কিওয়ার্ডঃ ${keywordCount} । আইডেন্টিফায়ারঃ ${identifierCount}`;
+            } else {
+                statsDisplay.textContent = '';
+            }
+            
             let html = `<pre class="output-text">${escapeHtml(output)}</pre>`;
             
-            if (error) {
+            // Only show error box if there's actual error content
+            if (error && error.trim()) {
                 html += `
                     <div class="error-box" style="margin-top: 1rem;">
                         <div class="error-title">Warnings/Errors:</div>
@@ -139,6 +149,8 @@ const API_URL = 'http://localhost:3001/api';
         // Show error
         function showError(error) {
             const outputContent = document.getElementById('outputContent');
+            const statsDisplay = document.getElementById('statsDisplay');
+            statsDisplay.textContent = '';
             outputContent.innerHTML = `
                 <div class="error-box">
                     <div class="error-title">Error:</div>

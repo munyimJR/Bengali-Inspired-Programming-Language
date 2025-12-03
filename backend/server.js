@@ -131,10 +131,25 @@ app.post('/api/compile', async (req, res) => {
                     });
                 }
 
+                // Parse stats from stderr
+                let keywordCount = 0;
+                let identifierCount = 0;
+                let cleanStderr = runStderr || '';
+                
+                const statsMatch = cleanStderr.match(/\[STATS\]KEYWORDS:(\d+),IDENTIFIERS:(\d+)\[\/STATS\]/);
+                if (statsMatch) {
+                    keywordCount = parseInt(statsMatch[1], 10);
+                    identifierCount = parseInt(statsMatch[2], 10);
+                    // Remove stats from stderr
+                    cleanStderr = cleanStderr.replace(/\[STATS\]KEYWORDS:\d+,IDENTIFIERS:\d+\[\/STATS\]\n?/g, '');
+                }
+
                 res.json({
                     success: true,
                     output: runStdout,
-                    error: runStderr || ''
+                    error: cleanStderr,
+                    keywordCount: keywordCount,
+                    identifierCount: identifierCount
                 });
             });
         });
