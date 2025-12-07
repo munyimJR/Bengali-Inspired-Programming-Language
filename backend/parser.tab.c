@@ -83,8 +83,8 @@ extern int line_num;
 extern FILE *yyin;
 extern int keyword_count;
 extern int identifier_count;
-extern char *unique_keywords[];
-extern char *unique_identifiers[];
+extern char *keywords[];
+extern char *identifiers[];
 
 typedef enum { TYPE_INT, TYPE_FLOAT, TYPE_STRING } VarType;
 
@@ -2955,7 +2955,6 @@ Symbol* declare_symbol(const char *name, VarType type) {
 int main(int argc, char **argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
     
-    // Reset counters
     keyword_count = 0;
     identifier_count = 0;
     
@@ -2978,15 +2977,13 @@ int main(int argc, char **argv) {
     yyparse();
     fclose(yyin);
     
-    // Print counts at the end
     fprintf(stderr, "\n[STATS]KEYWORDS:%d,IDENTIFIERS:%d[/STATS]\n", keyword_count, identifier_count);
     
-    // Clean up allocated memory
     for (int i = 0; i < keyword_count; i++) {
-        free(unique_keywords[i]);
+        free(keywords[i]);
     }
     for (int i = 0; i < identifier_count; i++) {
-        free(unique_identifiers[i]);
+        free(identifiers[i]);
     }
     
     return 0;

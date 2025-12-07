@@ -6,73 +6,57 @@
 #include <locale.h>
 int line_num = 1;
 
-// Hash sets for tracking unique keywords and identifiers
-#define MAX_KEYWORDS 100
-#define MAX_IDENTIFIERS 1000
-
-char *unique_keywords[MAX_KEYWORDS];
-char *unique_identifiers[MAX_IDENTIFIERS];
+char *keywords[100];
+char *identifiers[1000];
 int keyword_count = 0;
 int identifier_count = 0;
 
-// Helper function to check if keyword already exists
-int keyword_exists(const char *keyword) {
+int has_keyword(const char *word) {
     for (int i = 0; i < keyword_count; i++) {
-        if (strcmp(unique_keywords[i], keyword) == 0) {
-            return 1;
-        }
+        if (strcmp(keywords[i], word) == 0) return 1;
     }
     return 0;
 }
 
-// Helper function to check if identifier already exists
-int identifier_exists(const char *identifier) {
+int has_identifier(const char *word) {
     for (int i = 0; i < identifier_count; i++) {
-        if (strcmp(unique_identifiers[i], identifier) == 0) {
-            return 1;
-        }
+        if (strcmp(identifiers[i], word) == 0) return 1;
     }
     return 0;
 }
 
-// Helper function to add unique keyword
-void add_unique_keyword(const char *keyword) {
-    if (!keyword_exists(keyword) && keyword_count < MAX_KEYWORDS) {
-        unique_keywords[keyword_count] = strdup(keyword);
-        keyword_count++;
+void add_keyword(const char *word) {
+    if (!has_keyword(word) && keyword_count < 100) {
+        keywords[keyword_count++] = strdup(word);
     }
 }
 
-// Helper function to add unique identifier
-void add_unique_identifier(const char *identifier) {
-    if (!identifier_exists(identifier) && identifier_count < MAX_IDENTIFIERS) {
-        unique_identifiers[identifier_count] = strdup(identifier);
-        identifier_count++;
+void add_identifier(const char *word) {
+    if (!has_identifier(word) && identifier_count < 1000) {
+        identifiers[identifier_count++] = strdup(word);
     }
 }
 
-/* Helper function to convert Bangla digits to ASCII in lexer */
-int convert_bangla_digit_to_int(const char *str) {
+int to_int(const char *str) {
     unsigned char *p = (unsigned char *)str;
     char result[1000];
     int j = 0;
     
     while (*p) {
-        // Bangla digits: ০-৯ (UTF-8: 0xE0 0xA7 0xA6 to 0xE0 0xA7 0xAF)
         if (p[0] == 0xE0 && p[1] == 0xA7 && p[2] >= 0xA6 && p[2] <= 0xAF) {
             result[j++] = '0' + (p[2] - 0xA6);
             p += 3;
         } else if (*p >= '0' && *p <= '9') {
             result[j++] = *p++;
         } else {
-            p++; // Skip invalid characters
+            p++;
         }
     }
     result[j] = '\0';
     return atoi(result);
 }
 
-double convert_bangla_digit_to_float(const char *str) {
+double to_float(const char *str) {
     unsigned char *p = (unsigned char *)str;
     char result[1000];
     int j = 0;
@@ -105,26 +89,25 @@ STRING      \"([^\\\"]|\\.)*\"
 
 %%
 
-"//".*                          { /* Single line comment */ }
+"//".*                          { }
 "/*"([^*]|\*+[^*/])*\*+"/"      {
-    int i;
-    for(i = 0; yytext[i]; i++) {
+    for(int i = 0; yytext[i]; i++) {
         if(yytext[i] == '\n') line_num++;
     }
 }
 
-"শুরু"                          { add_unique_keyword("শুরু"); return SHURU; }
-"শেষ"                           { add_unique_keyword("শেষ"); return SHESH; }
-"পূর্ণ"                           { add_unique_keyword("পূর্ণ"); return PURNO; }
-"দশমিক"                         { add_unique_keyword("দশমিক"); return VOGNO; }
-"শব্দ"                         { add_unique_keyword("শব্দ"); return SHOBDO; }
-"যদি"                           { add_unique_keyword("যদি"); return JODI; }
-"নাহলে"                         { add_unique_keyword("নাহলে"); return NAHOLE; }
-"যতক্ষণ"                        { add_unique_keyword("যতক্ষণ"); return JOTOKKHON; }
-"জন্য"                          { add_unique_keyword("জন্য"); return JNY; }
-"দেখাও"                         { add_unique_keyword("দেখাও"); return DEKHAO; }
-"নাও"                           { add_unique_keyword("নাও"); return NAO; }
-"নতুনলাইন"                     { add_unique_keyword("নতুনলাইন"); return NEWLINE_KW; }
+"শুরু"                          { add_keyword("শুরু"); return SHURU; }
+"শেষ"                           { add_keyword("শেষ"); return SHESH; }
+"পূর্ণ"                           { add_keyword("পূর্ণ"); return PURNO; }
+"দশমিক"                         { add_keyword("দশমিক"); return VOGNO; }
+"শব্দ"                         { add_keyword("শব্দ"); return SHOBDO; }
+"যদি"                           { add_keyword("যদি"); return JODI; }
+"নাহলে"                         { add_keyword("নাহলে"); return NAHOLE; }
+"যতক্ষণ"                        { add_keyword("যতক্ষণ"); return JOTOKKHON; }
+"জন্য"                          { add_keyword("জন্য"); return JNY; }
+"দেখাও"                         { add_keyword("দেখাও"); return DEKHAO; }
+"নাও"                           { add_keyword("নাও"); return NAO; }
+"নতুনলাইন"                     { add_keyword("নতুনলাইন"); return NEWLINE_KW; }
 
 "+"                             { return PLUS; }
 "-"                             { return MINUS; }
@@ -155,24 +138,22 @@ STRING      \"([^\\\"]|\\.)*\"
 ">>"                            { return INPUT_OP; }
 
 {INTEGER}                       {
-    yylval.ival = convert_bangla_digit_to_int(yytext);
+    yylval.ival = to_int(yytext);
     return INT_LITERAL;
 }
 
 {FLOAT}                         {
-    yylval.fval = convert_bangla_digit_to_float(yytext);
+    yylval.fval = to_float(yytext);
     return FLOAT_LITERAL;
 }
 
 {STRING}                        {
     int len = strlen(yytext);
     char *temp = (char*)malloc(len - 1);
-    char *src;
-    char *dst;
     strncpy(temp, yytext + 1, len - 2);
     temp[len - 2] = '\0';
-    src = temp;
-    dst = temp;
+    
+    char *src = temp, *dst = temp;
     while (*src) {
         if (*src == '\\') {
             src++;
@@ -190,17 +171,17 @@ STRING      \"([^\\\"]|\\.)*\"
     }
     *dst = '\0';
     yylval.sval = temp;
-    add_unique_identifier(yytext);
+    add_identifier(yytext);
     return STRING_LITERAL;
 }
 
 {ID}                            {
     yylval.sval = strdup(yytext);
-    add_unique_identifier(yytext);
+    add_identifier(yytext);
     return IDENTIFIER;
 }
 
-[ \t\r]+                        { /* Ignore whitespace */ }
+[ \t\r]+                        { }
 \n                              { line_num++; }
 
 .                               {
