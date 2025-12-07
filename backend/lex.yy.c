@@ -1150,12 +1150,13 @@ YY_RULE_SETUP
     }
     *dst = '\0';
     yylval.sval = temp;
+    add_unique_identifier(yytext);
     return STRING_LITERAL;
 }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 196 "scanner.l"
+#line 197 "scanner.l"
 {
     yylval.sval = strdup(yytext);
     add_unique_identifier(yytext);
@@ -1164,17 +1165,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 202 "scanner.l"
+#line 203 "scanner.l"
 { /* Ignore whitespace */ }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 203 "scanner.l"
+#line 204 "scanner.l"
 { line_num++; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 205 "scanner.l"
+#line 206 "scanner.l"
 {
     fprintf(stderr, "Error at line %d: Unknown character '%s'\n",
             line_num, yytext);
@@ -1183,10 +1184,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 211 "scanner.l"
+#line 212 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1190 "lex.yy.c"
+#line 1191 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2072,4 +2073,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 211 "scanner.l"
+#line 212 "scanner.l"

@@ -190,6 +190,7 @@ STRING      \"([^\\\"]|\\.)*\"
     }
     *dst = '\0';
     yylval.sval = temp;
+    add_unique_identifier(yytext);
     return STRING_LITERAL;
 }
 
