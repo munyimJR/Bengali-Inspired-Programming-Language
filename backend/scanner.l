@@ -5,8 +5,51 @@
 #include <string.h>
 #include <locale.h>
 int line_num = 1;
+
+// Hash sets for tracking unique keywords and identifiers
+#define MAX_KEYWORDS 100
+#define MAX_IDENTIFIERS 1000
+
+char *unique_keywords[MAX_KEYWORDS];
+char *unique_identifiers[MAX_IDENTIFIERS];
 int keyword_count = 0;
 int identifier_count = 0;
+
+// Helper function to check if keyword already exists
+int keyword_exists(const char *keyword) {
+    for (int i = 0; i < keyword_count; i++) {
+        if (strcmp(unique_keywords[i], keyword) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Helper function to check if identifier already exists
+int identifier_exists(const char *identifier) {
+    for (int i = 0; i < identifier_count; i++) {
+        if (strcmp(unique_identifiers[i], identifier) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Helper function to add unique keyword
+void add_unique_keyword(const char *keyword) {
+    if (!keyword_exists(keyword) && keyword_count < MAX_KEYWORDS) {
+        unique_keywords[keyword_count] = strdup(keyword);
+        keyword_count++;
+    }
+}
+
+// Helper function to add unique identifier
+void add_unique_identifier(const char *identifier) {
+    if (!identifier_exists(identifier) && identifier_count < MAX_IDENTIFIERS) {
+        unique_identifiers[identifier_count] = strdup(identifier);
+        identifier_count++;
+    }
+}
 
 /* Helper function to convert Bangla digits to ASCII in lexer */
 int convert_bangla_digit_to_int(const char *str) {
@@ -70,18 +113,18 @@ STRING      \"([^\\\"]|\\.)*\"
     }
 }
 
-"শুরু"                          { keyword_count++; return SHURU; }
-"শেষ"                           { keyword_count++; return SHESH; }
-"পূর্ণ"                           { keyword_count++; return PURNO; }
-"দশমিক"                         { keyword_count++; return VOGNO; }
-"শব্দ"                         { keyword_count++; return SHOBDO; }
-"যদি"                           { keyword_count++; return JODI; }
-"নাহলে"                         { keyword_count++; return NAHOLE; }
-"যতক্ষণ"                        { keyword_count++; return JOTOKKHON; }
-"জন্য"                          { keyword_count++; return JNY; }
-"দেখাও"                         { keyword_count++; return DEKHAO; }
-"নাও"                           { keyword_count++; return NAO; }
-"নতুনলাইন"                     { keyword_count++; return NEWLINE_KW; }
+"শুরু"                          { add_unique_keyword("শুরু"); return SHURU; }
+"শেষ"                           { add_unique_keyword("শেষ"); return SHESH; }
+"পূর্ণ"                           { add_unique_keyword("পূর্ণ"); return PURNO; }
+"দশমিক"                         { add_unique_keyword("দশমিক"); return VOGNO; }
+"শব্দ"                         { add_unique_keyword("শব্দ"); return SHOBDO; }
+"যদি"                           { add_unique_keyword("যদি"); return JODI; }
+"নাহলে"                         { add_unique_keyword("নাহলে"); return NAHOLE; }
+"যতক্ষণ"                        { add_unique_keyword("যতক্ষণ"); return JOTOKKHON; }
+"জন্য"                          { add_unique_keyword("জন্য"); return JNY; }
+"দেখাও"                         { add_unique_keyword("দেখাও"); return DEKHAO; }
+"নাও"                           { add_unique_keyword("নাও"); return NAO; }
+"নতুনলাইন"                     { add_unique_keyword("নতুনলাইন"); return NEWLINE_KW; }
 
 "+"                             { return PLUS; }
 "-"                             { return MINUS; }
@@ -152,7 +195,7 @@ STRING      \"([^\\\"]|\\.)*\"
 
 {ID}                            {
     yylval.sval = strdup(yytext);
-    identifier_count++;
+    add_unique_identifier(yytext);
     return IDENTIFIER;
 }
 
