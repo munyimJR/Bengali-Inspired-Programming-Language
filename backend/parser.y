@@ -15,8 +15,10 @@ extern int identifier_count;
 extern char *keywords[];
 extern char *identifiers[];
 
+// ডেটা টাইপ
 typedef enum { TYPE_INT, TYPE_FLOAT, TYPE_STRING } VarType;
 
+// সিম্বল টেবিল
 typedef struct {
     char name[100];
     VarType type;
@@ -30,6 +32,7 @@ typedef struct {
 Symbol symbol_table[1000];
 int symbol_count = 0;
 
+// AST নোড টাইপ
 typedef enum {
     NODE_PROGRAM, NODE_STMT_LIST, NODE_DECLARATION, NODE_ASSIGNMENT,
     NODE_INCREMENT, NODE_DECREMENT, NODE_OUTPUT, NODE_INPUT,
@@ -66,6 +69,7 @@ double eval_expression(ASTNode *node);
 char* eval_string_expression(ASTNode *node);
 int eval_condition(ASTNode *node);
 
+// বাংলা সংখ্যা ASCII তে রূপান্তর
 void convert_bangla_to_ascii(char *str) {
     unsigned char *p = (unsigned char *)str;
     char result[1000];
@@ -81,7 +85,8 @@ void convert_bangla_to_ascii(char *str) {
     result[j] = '\0';
     strcpy(str, result);
 }
-/* Convert integer to Bangla digits for output */
+
+// পূর্ণসংখ্যা বাংলা সংখ্যায় প্রিন্ট
 void print_bangla_number(int num) {
     char str[50];
     sprintf(str, "%d", num);
@@ -102,7 +107,7 @@ void print_bangla_number(int num) {
     }
 }
 
-/* Convert float to Bangla digits for output */
+// দশমিক সংখ্যা বাংলা সংখ্যায় প্রিন্ট
 void print_bangla_float(double num) {
     char str[50];
     sprintf(str, "%g", num);
@@ -565,12 +570,14 @@ string_term:
 
 %%
 
+// AST নোড তৈরি
 ASTNode* create_node(NodeType type) {
     ASTNode *node = (ASTNode*)calloc(1, sizeof(ASTNode));
     node->type = type;
     return node;
 }
 
+// নোড এক্সিকিউট
 void execute_node(ASTNode *node) {
     if (node == NULL) return;
     
@@ -815,6 +822,7 @@ void yyerror(const char *s) {
     fprintf(stderr, "Error at line %d: %s\n", line_num, s);
 }
 
+// সিম্বল লুকআপ
 Symbol* lookup_symbol(const char *name) {
     for (int i = 0; i < symbol_count; i++) {
         if (strcmp(symbol_table[i].name, name) == 0) {
@@ -825,6 +833,7 @@ Symbol* lookup_symbol(const char *name) {
     exit(1);
 }
 
+// সিম্বল ঘোষণা
 Symbol* declare_symbol(const char *name, VarType type) {
     for (int i = 0; i < symbol_count; i++) {
         if (strcmp(symbol_table[i].name, name) == 0) {
