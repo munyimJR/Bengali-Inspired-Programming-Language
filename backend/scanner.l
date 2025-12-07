@@ -11,6 +11,7 @@ char *identifiers[1000];
 int keyword_count = 0;
 int identifier_count = 0;
 
+// ইউনিক কিওয়ার্ড এবং আইডেন্টিফায়ার ট্র্যাকিং
 int has_keyword(const char *word) {
     for (int i = 0; i < keyword_count; i++) {
         if (strcmp(keywords[i], word) == 0) return 1;
@@ -37,6 +38,7 @@ void add_identifier(const char *word) {
     }
 }
 
+// বাংলা সংখ্যা থেকে পূর্ণসংখ্যায় রূপান্তর
 int to_int(const char *str) {
     unsigned char *p = (unsigned char *)str;
     char result[1000];
@@ -56,6 +58,7 @@ int to_int(const char *str) {
     return atoi(result);
 }
 
+// বাংলা সংখ্যা থেকে দশমিক সংখ্যায় রূপান্তর
 double to_float(const char *str) {
     unsigned char *p = (unsigned char *)str;
     char result[1000];
