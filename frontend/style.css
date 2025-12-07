@@ -21,7 +21,7 @@
         header {
             background: #282A35;
             backdrop-filter: none;
-            border-bottom: 1px solid #04AA6D;
+            border-bottom: 1px solid #048654;
             padding: 1rem 0;
         }
 
@@ -40,7 +40,7 @@
         }
 
         .logo-icon {
-            background: #04AA6D;
+            background: #048654;
             padding: 0.5rem;
             border-radius: 0.5rem;
             width: 50px;
@@ -53,7 +53,7 @@
         .logo-text h1 {
             font-size: 1.5rem;
             font-weight: bold;
-            background: linear-gradient(135deg, #04AA6D 0%, #4ec9b0 50%, #00d4ff 100%);
+            background: linear-gradient(135deg, #048654 0%, #4ec9b0 50%, #00d4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -85,16 +85,16 @@
         .btn-secondary {
             background: #2d2d30;
             color: #d4d4d4;
-            border: 1px solid #04AA6D;
+            border: 1px solid #048654;
         }
 
         .btn-secondary:hover {
-            background: #04AA6D;
+            background: #048654;
             color: #fff;
         }
 
         .btn-primary {
-            background: #04AA6D;
+            background: #048654;
             color: #fff;
             padding: 1rem 1.5rem;
             font-size: 1rem;
@@ -186,12 +186,12 @@
         }
 
         .tab.active {
-            background: #04AA6D;
+            background: #048654;
             color: #fff;
         }
 
         .tab:hover {
-            color: #04AA6D;
+            color: #048654;
         }
 
         /* Editor Container */
@@ -291,12 +291,12 @@
 
         .example-item:hover {
             background: #3e3e42;
-            border-color: #04AA6D;
+            border-color: #048654;
         }
 
         .example-title {
             font-weight: 500;
-            color: #04AA6D;
+            color: #048654;
             margin-bottom: 0.25rem;
         }
 
@@ -317,7 +317,7 @@
         .output-header {
             background: #2d2d30;
             padding: 0.5rem 1rem;
-            border-bottom: 1px solid #04AA6D;
+            border-bottom: 1px solid #048654;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -454,7 +454,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #04AA6D;
+            background: #048654;
             border-radius: 4px;
         }
 
