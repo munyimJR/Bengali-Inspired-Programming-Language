@@ -86,18 +86,51 @@ void convert_bangla_to_ascii(char *str) {
     strcpy(str, result);
 }
 
-// সংখ্যা বাংলায় প্রিন্ট (পূর্ণসংখ্যা ও দশমিক)
-void print_bangla(double num) {
+// পূর্ণসংখ্যা বাংলা সংখ্যায় প্রিন্ট
+void print_bangla_number(int num) {
     char str[50];
-    sprintf(str, fmod(num, 1.0) == 0 ? "%.0f" : "%g", num);
+    sprintf(str, "%d", num);
     
-    const char* bangla_digits[] = {"০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"};
+    const char* bangla_digits[] = {
+        "০", "১", "২", "৩", "৪", 
+        "৫", "৬", "৭", "৮", "৯"
+    };
     
-    for (int i = 0; str[i]; i++) {
-        if (str[i] >= '0' && str[i] <= '9')
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] >= '0' && str[i] <= '9') {
             printf("%s", bangla_digits[str[i] - '0']);
-        else
+        } else if (str[i] == '-') {
+            printf("-");
+        } else {
             printf("%c", str[i]);
+        }
+    }
+}
+
+// দশমিক সংখ্যা বাংলা সংখ্যায় প্রিন্ট
+void print_bangla_float(double num) {
+    char str[50];
+    sprintf(str, "%g", num);
+    
+    const char* bangla_digits[] = {
+        "০", "১", "২", "৩", "৪", 
+        "৫", "৬", "৭", "৮", "৯"
+    };
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] >= '0' && str[i] <= '9') {
+            printf("%s", bangla_digits[str[i] - '0']);
+        } else if (str[i] == '. ') {
+            printf(".");
+        } else if (str[i] == '-') {
+            printf("-");
+        } else if (str[i] == 'e' || str[i] == 'E') {
+            printf("e");
+        } else if (str[i] == '+') {
+            printf("+");
+        } else {
+            printf("%c", str[i]);
+        }
     }
 }
 
@@ -129,7 +162,8 @@ void print_bangla(double num) {
 %type <node> if_statement while_statement for_statement
 %type <node> expression term factor arithmetic_expr condition
 %type <node> string_expression string_term output_list output_item
-%type <node> decl_list input_list for_init for_update
+%type <node> decl_list_int decl_list_float decl_list_string
+%type <node> input_list for_init for_update
 
 %right ASSIGN
 %left OR
@@ -178,17 +212,17 @@ statement:
     ;
 
 declaration:
-    PURNO decl_list { $$ = $2; $$->var_type = TYPE_INT; }
-    | VOGNO decl_list { $$ = $2; $$->var_type = TYPE_FLOAT; }
-    | SHOBDO decl_list { $$ = $2; $$->var_type = TYPE_STRING; }
+    PURNO decl_list_int { $$ = $2; $$->var_type = TYPE_INT; }
+    | VOGNO decl_list_float { $$ = $2; $$->var_type = TYPE_FLOAT; }
+    | SHOBDO decl_list_string { $$ = $2; $$->var_type = TYPE_STRING; }
     ;
 
-decl_list:
+decl_list_int:
     IDENTIFIER {
         $$ = create_node(NODE_DECLARATION);
         $$->value.sval = $1;
     }
-    | IDENTIFIER COMMA decl_list {
+    | IDENTIFIER COMMA decl_list_int {
         $$ = create_node(NODE_DECLARATION);
         $$->value.sval = $1;
         $$->next = $3;
@@ -198,18 +232,53 @@ decl_list:
         $$->value.sval = $1;
         $$->right = $3;
     }
-    | IDENTIFIER ASSIGN string_expression {
-        $$ = create_node(NODE_DECLARATION);
-        $$->value.sval = $1;
-        $$->right = $3;
-    }
-    | IDENTIFIER ASSIGN expression COMMA decl_list {
+    | IDENTIFIER ASSIGN expression COMMA decl_list_int {
         $$ = create_node(NODE_DECLARATION);
         $$->value.sval = $1;
         $$->right = $3;
         $$->next = $5;
     }
-    | IDENTIFIER ASSIGN string_expression COMMA decl_list {
+    ;
+
+decl_list_float:
+    IDENTIFIER {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+    }
+    | IDENTIFIER COMMA decl_list_float {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+        $$->next = $3;
+    }
+    | IDENTIFIER ASSIGN expression {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+        $$->right = $3;
+    }
+    | IDENTIFIER ASSIGN expression COMMA decl_list_float {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+        $$->right = $3;
+        $$->next = $5;
+    }
+    ;
+
+decl_list_string:
+    IDENTIFIER {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+    }
+    | IDENTIFIER COMMA decl_list_string {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+        $$->next = $3;
+    }
+    | IDENTIFIER ASSIGN string_expression {
+        $$ = create_node(NODE_DECLARATION);
+        $$->value.sval = $1;
+        $$->right = $3;
+    }
+    | IDENTIFIER ASSIGN string_expression COMMA decl_list_string {
         $$ = create_node(NODE_DECLARATION);
         $$->value.sval = $1;
         $$->right = $3;
@@ -220,27 +289,39 @@ decl_list:
 assignment:
     IDENTIFIER ASSIGN expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '='; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '=';
+        $$->right = $3;
     }
     | IDENTIFIER ASSIGN string_expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '='; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '=';
+        $$->right = $3;
     }
     | IDENTIFIER PLUS_ASSIGN expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '+'; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '+';
+        $$->right = $3;
     }
     | IDENTIFIER MINUS_ASSIGN expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '-'; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '-';
+        $$->right = $3;
     }
     | IDENTIFIER MULT_ASSIGN expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '*'; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '*';
+        $$->right = $3;
     }
     | IDENTIFIER DIV_ASSIGN expression {
         $$ = create_node(NODE_ASSIGNMENT);
-        $$->value.sval = $1; $$->op = '/'; $$->right = $3;
+        $$->value.sval = $1;
+        $$->op = '/';
+        $$->right = $3;
     }
     ;
 
@@ -356,14 +437,54 @@ for_update:
     ;
 
 condition:
-    arithmetic_expr LT arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = '<'; $$->left = $1; $$->right = $3; }
-    | arithmetic_expr GT arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = '>'; $$->left = $1; $$->right = $3; }
-    | arithmetic_expr LE arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = 'l'; $$->left = $1; $$->right = $3; }
-    | arithmetic_expr GE arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = 'g'; $$->left = $1; $$->right = $3; }
-    | arithmetic_expr EQ arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = 'e'; $$->left = $1; $$->right = $3; }
-    | arithmetic_expr NE arithmetic_expr { $$ = create_node(NODE_CONDITION); $$->op = 'n'; $$->left = $1; $$->right = $3; }
-    | condition AND condition { $$ = create_node(NODE_CONDITION); $$->op = '&'; $$->left = $1; $$->right = $3; }
-    | condition OR condition { $$ = create_node(NODE_CONDITION); $$->op = '|'; $$->left = $1; $$->right = $3; }
+    arithmetic_expr LT arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = '<';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | arithmetic_expr GT arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = '>';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | arithmetic_expr LE arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = 'l';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | arithmetic_expr GE arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = 'g';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | arithmetic_expr EQ arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = 'e';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | arithmetic_expr NE arithmetic_expr {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = 'n';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | condition AND condition {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = '&';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | condition OR condition {
+        $$ = create_node(NODE_CONDITION);
+        $$->op = '|';
+        $$->left = $1;
+        $$->right = $3;
+    }
     | LPAREN condition RPAREN { $$ = $2; }
     ;
 
@@ -373,32 +494,78 @@ arithmetic_expr:
 
 expression:
     term { $$ = $1; }
-    | expression PLUS term { $$ = create_node(NODE_EXPRESSION); $$->op = '+'; $$->left = $1; $$->right = $3; }
-    | expression MINUS term { $$ = create_node(NODE_EXPRESSION); $$->op = '-'; $$->left = $1; $$->right = $3; }
+    | expression PLUS term {
+        $$ = create_node(NODE_EXPRESSION);
+        $$->op = '+';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | expression MINUS term {
+        $$ = create_node(NODE_EXPRESSION);
+        $$->op = '-';
+        $$->left = $1;
+        $$->right = $3;
+    }
     ;
 
 term:
     factor { $$ = $1; }
-    | term MULT factor { $$ = create_node(NODE_EXPRESSION); $$->op = '*'; $$->left = $1; $$->right = $3; }
-    | term DIV factor { $$ = create_node(NODE_EXPRESSION); $$->op = '/'; $$->left = $1; $$->right = $3; }
+    | term MULT factor {
+        $$ = create_node(NODE_EXPRESSION);
+        $$->op = '*';
+        $$->left = $1;
+        $$->right = $3;
+    }
+    | term DIV factor {
+        $$ = create_node(NODE_EXPRESSION);
+        $$->op = '/';
+        $$->left = $1;
+        $$->right = $3;
+    }
     ;
 
 factor:
-    INT_LITERAL { $$ = create_node(NODE_INT_LITERAL); $$->value.ival = $1; }
-    | FLOAT_LITERAL { $$ = create_node(NODE_FLOAT_LITERAL); $$->value.fval = $1; }
-    | IDENTIFIER { $$ = create_node(NODE_IDENTIFIER); $$->value.sval = strdup($1); free($1); }
+    INT_LITERAL {
+        $$ = create_node(NODE_INT_LITERAL);
+        $$->value.ival = $1;
+    }
+    | FLOAT_LITERAL {
+        $$ = create_node(NODE_FLOAT_LITERAL);
+        $$->value.fval = $1;
+    }
+    | IDENTIFIER {
+        $$ = create_node(NODE_IDENTIFIER);
+        $$->value.sval = strdup($1);
+        free($1);
+    }
     | LPAREN expression RPAREN { $$ = $2; }
-    | MINUS factor { $$ = create_node(NODE_EXPRESSION); $$->op = 'u'; $$->right = $2; }
+    | MINUS factor {
+        $$ = create_node(NODE_EXPRESSION);
+        $$->op = 'u';
+        $$->right = $2;
+    }
     ;
 
 string_expression:
     string_term { $$ = $1; }
-    | string_expression PLUS string_term { $$ = create_node(NODE_STRING_EXPR); $$->op = '+'; $$->left = $1; $$->right = $3; }
+    | string_expression PLUS string_term {
+        $$ = create_node(NODE_STRING_EXPR);
+        $$->op = '+';
+        $$->left = $1;
+        $$->right = $3;
+    }
     ;
 
 string_term:
-    STRING_LITERAL { $$ = create_node(NODE_STRING_LITERAL); $$->value.sval = $1; }
-    | IDENTIFIER { $$ = create_node(NODE_IDENTIFIER); $$->value.sval = strdup($1); free($1); }
+    STRING_LITERAL {
+        $$ = create_node(NODE_STRING_LITERAL);
+        $$->value.sval = $1;
+    }
+    | IDENTIFIER {
+        $$ = create_node(NODE_IDENTIFIER);
+        $$->value.sval = strdup($1);
+        free($1);
+    }
     ;
 
 %%
@@ -418,11 +585,15 @@ void execute_node(ASTNode *node) {
         case NODE_DECLARATION: {
             Symbol *sym = declare_symbol(node->value.sval, node->var_type);
             if (node->right) {
-                if (node->var_type == TYPE_STRING)
+                if (node->var_type == TYPE_STRING) {
                     sym->value.sval = eval_string_expression(node->right);
-                else {
+                } else {
                     double val = eval_expression(node->right);
-                    (node->var_type == TYPE_INT) ? (sym->value.ival = (int)val) : (sym->value.fval = val);
+                    if (node->var_type == TYPE_INT) {
+                        sym->value.ival = (int)val;
+                    } else {
+                        sym->value.fval = val;
+                    }
                 }
             }
             break;
@@ -430,29 +601,47 @@ void execute_node(ASTNode *node) {
         case NODE_ASSIGNMENT: {
             Symbol *sym = lookup_symbol(node->value.sval);
             if (sym) {
-                if (sym->type == TYPE_STRING) {
+                if (sym->type == TYPE_STRING && node->right->type == NODE_STRING_LITERAL) {
+                    if (sym->value.sval) free(sym->value.sval);
+                    sym->value.sval = eval_string_expression(node->right);
+                } else if (sym->type == TYPE_STRING) {
                     if (sym->value.sval) free(sym->value.sval);
                     sym->value.sval = eval_string_expression(node->right);
                 } else {
                     double val = eval_expression(node->right);
-                    double curr = sym->type == TYPE_INT ? sym->value.ival : sym->value.fval;
-                    double result = (node->op == '=') ? val : 
-                                   (node->op == '+') ? curr + val :
-                                   (node->op == '-') ? curr - val :
-                                   (node->op == '*') ? curr * val : curr / val;
-                    if (sym->type == TYPE_INT) sym->value.ival = (int)result;
-                    else sym->value.fval = result;
+                    if (node->op == '=') {
+                        if (sym->type == TYPE_INT) sym->value.ival = (int)val;
+                        else sym->value.fval = val;
+                    } else if (node->op == '+') {
+                        if (sym->type == TYPE_INT) sym->value.ival += (int)val;
+                        else sym->value.fval += val;
+                    } else if (node->op == '-') {
+                        if (sym->type == TYPE_INT) sym->value.ival -= (int)val;
+                        else sym->value.fval -= val;
+                    } else if (node->op == '*') {
+                        if (sym->type == TYPE_INT) sym->value.ival *= (int)val;
+                        else sym->value.fval *= val;
+                    } else if (node->op == '/') {
+                        if (sym->type == TYPE_INT) sym->value.ival /= (int)val;
+                        else sym->value.fval /= val;
+                    }
                 }
             }
             break;
         }
-        case NODE_INCREMENT:
+        case NODE_INCREMENT: {
+            Symbol *sym = lookup_symbol(node->value.sval);
+            if (sym) {
+                if (sym->type == TYPE_INT) sym->value.ival++;
+                else sym->value.fval++;
+            }
+            break;
+        }
         case NODE_DECREMENT: {
             Symbol *sym = lookup_symbol(node->value.sval);
             if (sym) {
-                int delta = (node->type == NODE_INCREMENT) ? 1 : -1;
-                if (sym->type == TYPE_INT) sym->value.ival += delta;
-                else sym->value.fval += delta;
+                if (sym->type == TYPE_INT) sym->value.ival--;
+                else sym->value.fval--;
             }
             break;
         }
@@ -469,7 +658,12 @@ void execute_node(ASTNode *node) {
                     printf("%s", str);
                     free(str);
                 } else {
-                    print_bangla(eval_expression(node->left));
+                    double val = eval_expression(node->left);
+                    if (fmod(val, 1.0) == 0) {
+                        print_bangla_number((int)val);
+                    } else {
+                        print_bangla_float(val);
+                    }
                 }
             }
             break;
@@ -477,17 +671,28 @@ void execute_node(ASTNode *node) {
         case NODE_INPUT: {
             Symbol *sym = lookup_symbol(node->value.sval);
             if (sym) {
-                char buffer[1000];
-                if (sym->type == TYPE_STRING) {
+                if (sym->type == TYPE_INT) {
+                    char buffer[100];
+                    if(scanf("%99s", buffer) == 1) {
+                        convert_bangla_to_ascii(buffer);
+                        sym->value.ival = atoi(buffer);
+                    }
+                } else if (sym->type == TYPE_FLOAT) {
+                    char buffer[100];
+                    if(scanf("%99s", buffer) == 1) {
+                        convert_bangla_to_ascii(buffer);
+                        sym->value.fval = atof(buffer);
+                    }
+                } else if (sym->type == TYPE_STRING) {
+                    char buffer[1000];
                     if(fgets(buffer, sizeof(buffer), stdin)) {
                         size_t len = strlen(buffer);
-                        if (len > 0 && buffer[len-1] == '\n') buffer[len-1] = '\0';
+                        if (len > 0 && buffer[len-1] == '\n') {
+                            buffer[len-1] = '\0';
+                        }
                         if (sym->value.sval) free(sym->value.sval);
                         sym->value.sval = strdup(buffer);
                     }
-                } else if(scanf("%99s", buffer) == 1) {
-                    convert_bangla_to_ascii(buffer);
-                    (sym->type == TYPE_INT) ? (sym->value.ival = atoi(buffer)) : (sym->value.fval = atof(buffer));
                 }
             }
             break;
@@ -645,8 +850,11 @@ Symbol* declare_symbol(const char *name, VarType type) {
     Symbol *sym = &symbol_table[symbol_count++];
     strcpy(sym->name, name);
     sym->type = type;
-    sym->value.ival = 0;  // Works for int, float (as 0.0), and pointer (as NULL)
-    if (type == TYPE_STRING) sym->value.sval = strdup("");
+    
+    if (type == TYPE_INT) sym->value.ival = 0;
+    else if (type == TYPE_FLOAT) sym->value.fval = 0.0;
+    else if (type == TYPE_STRING) sym->value.sval = strdup("");
+    
     return sym;
 }
 
